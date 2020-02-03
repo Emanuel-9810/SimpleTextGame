@@ -1,0 +1,218 @@
+/*******************************************************************************
+    Author          : Emanuel Aguirre
+    Project         : Text Adventure
+ ******************************************************************************/
+#include <iostream>
+#include <fstream>
+#include <string>
+
+/******************************************************************************
+*
+*
+*-------------------------------------------------------------------------------
+* This program asks the user to choose any 4 doors by direction. Either N, W, S,
+* or E. Three of the doors will either open to the monster room, genie room, pic
+* room, and the exit door will be the end. If the player enters the monster room
+* they lose all their apples and oranges, the genie will grant 2 apples and an
+* orange, and the picture room reveals a picture. When the player successfully
+* exits, the total score and number of apples and oranges is output.
+*
+*-------------------------------------------------------------------------------
+* INPUTS:
+*       name          :user inputs name
+*       monstername   :user inputs monster name
+*       direction     :user inputs the direction
+*
+* OUTPUTS:
+*       name          :Outputs the name
+*       monstername   :Outputs the monster name
+*       apples       :Outputs the number of apples
+*       oranges       :Outputs the number of oranges
+*
+*******************************************************************************/
+using namespace std;
+
+//FUNCTION PROTOTYPES
+/*******************************************************************************
+ * monsterRoom
+ *   This function is for the monster room, sets apples and oranges to zero
+ ******************************************************************************/
+void monsterRoom(string monster, int& apples,int& oranges);
+/*******************************************************************************
+ * genieRoom
+ *   This function is the genie room, increases the number of apples/oranges
+ ******************************************************************************/
+void genieRoom(int& apples, int& oranges);
+ /*******************************************************************************
+ * pictureRoom
+ * This function is the picture room and outputs the picture and message.
+ ******************************************************************************/
+ void pictureRoom();
+ /*******************************************************************************
+ * drawPicture
+ *   This function just outputs the picture when called by the picture room.
+ ******************************************************************************/
+ void drawPicture();
+ /*******************************************************************************
+ * exitRoom
+ *   This function ends the game and returns the score.
+********************************************************************************/
+void exitRoom(bool& GameEnd,int& apples,int& oranges);
+int main()
+{
+    // DATA TABLE
+    int alignment;                  // CALC - alignment
+    int apples;                    // CALC & OUTPUT - number of apples
+    int oranges;                    // CALC & OUTPUT - number of oranges
+    string name;                    // CALC & INPUT & OUTPUT - user's name
+    string monstername;             // CALC & INPUT & OUTPUT - monster's name
+    char direction;                 // CALC & INPUT - direction user inputs
+    bool GameEnd;                   // BOOL - whether the game is over or not
+
+    // Initialization
+    direction = '0';
+    GameEnd = false;
+    apples = 5;
+    oranges = 3;
+
+    srand(500);
+
+    // INPUT
+    cout << "Please enter your name: ";
+    cin >> name;
+    cout << "Name your scariest monster: ";
+    cin >> monstername;
+
+    // Processing - while loop exits after exitRoom is called
+    while(GameEnd == false)
+    {
+        //Randomize the alignment
+        alignment= rand()%2;
+
+        cout<< name<< ", you are in a room with 4 doors."<< endl << endl;
+        cout<< "You are carrying "<< apples<< " apples and "<< oranges
+            << " oranges."<< endl;
+
+        // using a while loop to keep asking for a valid input from user.
+        while(direction != 'N' && direction != 'n' && direction != 'S' && direction!='s'
+              && direction != 'E' && direction !='e' && direction != 'W' && direction!='w')
+        {
+            cout << "Pick a door to enter by typing the direction it is in "
+                    "(N/E/S/W): ";
+            cin >> direction;
+            cout << endl;
+        }
+        cout << endl;
+
+        // OUPUT
+        if(alignment==0)
+        {
+           if(direction == 'N' || direction=='n')
+           {
+               monsterRoom(monstername, apples, oranges);
+           }
+           if(direction == 'S'|| direction =='s')
+           {
+               genieRoom(apples, oranges);
+           }
+           if(direction == 'E' || direction=='e')
+           {
+               pictureRoom();
+           }
+           if(direction == 'W' || direction =='w')
+           {
+               exitRoom(GameEnd, apples, oranges);
+           }
+        }
+        if(alignment==1)
+        {
+            if(direction == 'N' || direction=='n')
+            {
+               exitRoom(GameEnd, apples, oranges);
+            }
+            if(direction == 'S' || direction=='s')
+            {
+               monsterRoom(monstername, apples, oranges);
+            }
+            if(direction == 'E' || direction=='e')
+            {
+               genieRoom(apples, oranges);
+            }
+            if(direction == 'W' || direction=='w')
+            {
+               pictureRoom();
+            }
+        }
+        direction = '0';            //asks the player the direction again
+    }
+    return 0;
+}
+/****************************************************************
+* monsterRoom
+*   This function is the monster room and takes away the amount
+*   of apples and oranges.
+***************************************************************/
+void monsterRoom(string monstername, int& apples,int& oranges)
+{
+    apples = 0;
+    oranges = 0;
+    cout << "WATCH OUT !!!" << endl << monstername << "attacks you and steals"
+         << " all of your apples and oranges." << endl;
+}
+/****************************************************************
+* genieRoom
+*   This function is the genie room and adds the apples and
+*   oranges when allowed
+***************************************************************/
+void genieRoom(int& apples,        // IN - the number of apples
+               int& oranges)        // IN - the number of oranges
+{
+    // calculate the apples and oranges.
+    apples += 2;
+    oranges += 1;
+    cout<<"!!Poof!! "<< "A Genie pops out and grants you 2 apples and 1 "
+                        "orange."<<endl;
+}
+/****************************************************************
+* pictureRoom
+*   This function returns the picture and the message
+***************************************************************/
+void pictureRoom()
+{
+    cout << "You found a picture of R2D2!" << endl;
+    drawPicture();
+}
+/****************************************************************
+* drawPicture
+*   This function outputs the picture.
+***************************************************************/
+void drawPicture()
+{
+    cout << "        _--~~--_" << endl;
+    cout << "      /~/_|  |_\\~\\" << endl;
+    cout << "     |____________|" << endl;
+    cout << "     |[][][][][][]|" << endl;
+    cout << "   __| __         |__" << endl;
+    cout << "  |  ||. |   ==   |  |" << endl;
+    cout << " (|  ||__|   ==   |  |)" << endl;
+    cout << "  |  |[] []  ==   |  |" << endl;
+    cout << "  |  |____________|  |" << endl;
+    cout << "  /__\\            /__\\" << endl;
+    cout << "   ~~              ~~ " << endl;
+    cout << endl;
+}
+
+/****************************************************************
+* exitRoom
+*   This function makes the game ends. It also count all the
+*   points that the player have earned.
+***************************************************************/
+void exitRoom(bool& GameEnd,int& apples,int& oranges)
+{
+    GameEnd = true;                     // set the boolean to true to end
+                                        // the while loop to end the game.
+    cout << "You found the exit!"<< endl;
+    cout<< "Your score is " << apples + oranges << "(" << apples
+        << " apples and " << oranges << " oranges)."<< endl;
+    cout<< "Bye bye!!!"<< endl;
+}
